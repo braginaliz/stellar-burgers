@@ -1,9 +1,9 @@
-import {
-  TypedUseSelectorHook,
-  useDispatch as dispatchHook,
-  useSelector as selectorHook
+import { 
+  TypedUseSelectorHook, 
+  useDispatch as reduxUseDispatch, 
+  useSelector as reduxUseSelector 
 } from 'react-redux';
-import { Middleware, configureStore, combineReducers } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, Middleware } from '@reduxjs/toolkit';
 
 import ingredientsReducer from '../slices/ingridients';
 import feedsReducer from '../slices/feeds';
@@ -13,24 +13,30 @@ import ordersReducer from '../slices/orders';
 
 import ordersMiddleware from '../middlewares';
 
-export const rootReducer = combineReducers({
+
+const rootReducer = combineReducers({
   user: userReducer,
   builder: builderReducer,
   ingredients: ingredientsReducer,
   feeds: feedsReducer,
-  orders: ordersReducer
+  orders: ordersReducer,
 });
 
-export const store = configureStore({
+// Конфиг Redux
+const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
+  middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware().concat(ordersMiddleware),
-  devTools: process.env.NODE_ENV !== 'production'
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
+// типы состояния корневого редюсера и диспетчера приложения
 export type RootState = ReturnType<typeof store.getState>;
-
 export type AppDispatch = typeof store.dispatch;
 
-export const useDispatch = dispatchHook.withTypes<AppDispatch>();
-export const useSelector = selectorHook.withTypes<RootState>();
+// типизированные хуки 
+const useDispatch: () => AppDispatch = reduxUseDispatch;
+const useSelector: TypedUseSelectorHook<RootState> = reduxUseSelector;
+
+
+export { store, useDispatch, useSelector};

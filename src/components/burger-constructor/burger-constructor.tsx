@@ -9,7 +9,7 @@ export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
+
   const constructorItems = useSelector((state) => state.builder);
 
   const { isAuthenticated } = useSelector((state) => state.user);

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, FC, useMemo } from 'react';
+import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { TIngredient, TTabMode } from '@utils-types';
@@ -23,7 +23,7 @@ export const BurgerIngredients: FC = () => {
     threshold: 0
   });
 
-  const [mainsRef, inViewFilling] = useInView({
+  const [mainsRef, inViewMains] = useInView({
     threshold: 0
   });
 
@@ -36,20 +36,20 @@ export const BurgerIngredients: FC = () => {
       setCurrentTab('bun');
     } else if (inViewSauces) {
       setCurrentTab('sauce');
-    } else if (inViewFilling) {
+    } else if (inViewMains) {
       setCurrentTab('main');
     }
-  }, [inViewBuns, inViewFilling, inViewSauces]);
+  }, [inViewBuns, inViewMains, inViewSauces]);
 
-  /* В можно лучше: скролл к разделу при клике на таб */
   const onTabClick = (tab: string) => {
     setCurrentTab(tab as TTabMode);
-    if (tab === 'bun')
+    if (tab === 'bun') {
       titleBunRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'main')
+    } else if (tab === 'main') {
       titleMainRef.current?.scrollIntoView({ behavior: 'smooth' });
-    if (tab === 'sauce')
+    } else if (tab === 'sauce') {
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (

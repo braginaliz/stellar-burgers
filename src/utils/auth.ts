@@ -1,13 +1,34 @@
 import { deleteCookie, setCookie } from './cookie';
 
-export const storeTokens = (refreshToken: string, accessToken: string) => {
-  localStorage.setItem('refreshToken', String(refreshToken));
+class TokenManager {
+    private static readonly refreshTokenKey = 'refreshToken';
+    private static readonly accessTokenCookieName = 'accessToken';
 
-  setCookie('accessToken', String(accessToken));
-};
+    static storeTokens(refreshToken: string, accessToken: string): void {
+        this.saveRefreshToken(refreshToken);
+        this.saveAccessToken(accessToken);
+    }
 
-export const clearTokens = () => {
-  localStorage.removeItem('refreshToken');
+    private static saveRefreshToken(token: string): void {
+        localStorage.setItem(this.refreshTokenKey, String(token));
+    }
 
-  deleteCookie('accessToken');
-};
+    private static saveAccessToken(token: string): void {
+        setCookie(this.accessTokenCookieName, String(token));
+    }
+
+    static clearTokens(): void {
+        this.removeRefreshToken();
+        this.removeAccessToken();
+    }
+
+    private static removeRefreshToken(): void {
+        localStorage.removeItem(this.refreshTokenKey);
+    }
+
+    private static removeAccessToken(): void {
+        deleteCookie(this.accessTokenCookieName);
+    }
+}
+
+export const { storeTokens, clearTokens } = TokenManager;
